@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import hooks from "./hooks.js";
 
 const waterSchema = new Schema(
   {
@@ -21,6 +22,10 @@ const waterSchema = new Schema(
     timestamps: true,
   }
 );
+
+waterSchema.post("save", hooks.handleSaveError);
+waterSchema.pre("findOneAndUpdate", hooks.setUpdateSettings);
+waterSchema.post("findOneAndUpdate", hooks.handleSaveError);
 
 const Water = model("water", waterSchema);
 
