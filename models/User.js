@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 import hooks from "./hooks.js";
 
 import { emailRegexp } from "../constans/user-constants.js";
@@ -53,6 +53,7 @@ const userSchema = new Schema(
 );
 
 userSchema.post("save", hooks.handleSaveError);
+
 userSchema.pre("findOneAndUpdate", hooks.setUpdateSettings);
 userSchema.post("findOneAndUpdate", hooks.handleSaveError);
 
