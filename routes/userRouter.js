@@ -29,9 +29,9 @@ userRouter.post(
 );
 
 userRouter.patch(
-  "/avatars",
+  "/avatar",
   authenticate,
-  upload.single("avatarUrl"),
+  upload.single("avatarURL"),
   resizeFile,
   usersControllers.updateAvatar
 );

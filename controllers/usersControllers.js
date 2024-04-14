@@ -140,12 +140,12 @@ const updateAvatar = async (req, res) => {
   const newPathAvatar = path.join(avatarPath, filename);
 
   await fs.rename(oldPathAvatar, newPathAvatar);
-  const avatarUrl = path.join("avatars", filename);
+  const avatarURL = path.join("avatars", filename);
 
-  const user = await usersService.updateUser({ _id: id }, { avatarUrl });
+  const user = await usersService.updateUser({ _id: id }, { avatarURL });
 
   res.status(200).json({
-    avatarUrl: user.avatarUrl,
+    avatarUrl: user.avatarURL,
   });
 };
 
