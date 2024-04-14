@@ -16,10 +16,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/api/water-portions", waterPortionsRouter);
 app.use("/api/users", userRouter);
 
 app.use(authenticate);
+
+app.use("/api/water-portions", waterPortionsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

@@ -25,14 +25,7 @@ userRouter.post(
 userRouter.post(
   "/login",
   validateBody(usersSchemas.userLoginSchema),
-  usersControllers.signin
-);
-
-userRouter.patch(
-  "/subscription",
-  authenticate,
-  validateBody(usersSchemas.userUpdateSubscriptionSchema),
-  usersControllers.updateSubscription
+  usersControllers.login
 );
 
 userRouter.patch(
@@ -45,6 +38,6 @@ userRouter.patch(
 
 userRouter.post("/current", authenticate, usersControllers.getCurrent);
 
-userRouter.post("/logout", authenticate, usersControllers.signout);
+userRouter.post("/logout", authenticate, usersControllers.logout);
 
 export default userRouter;

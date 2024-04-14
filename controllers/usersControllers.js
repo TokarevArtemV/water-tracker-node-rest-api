@@ -53,7 +53,7 @@ const verify = async (req, res) => {
 
   await usersService.updateUser(
     { _id: user._id },
-    { verify: true, verificationToken: "null" }
+    { verify: true, verificationToken: null }
   );
 
   res.status(200).json({ message: "Verification successful" });
@@ -84,7 +84,7 @@ const verifyAgain = async (req, res) => {
   });
 };
 
-const signin = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await usersService.findUser({ email });
 
@@ -122,24 +122,12 @@ const getCurrent = async (req, res) => {
   });
 };
 
-const signout = async (req, res) => {
+const logout = async (req, res) => {
   const { _id: id } = req.user;
 
   await usersService.updateUser({ _id: id }, { token: "" });
 
   res.status(204).json();
-};
-
-const updateSubscription = async (req, res) => {
-  const { _id: id } = req.user;
-  const { subscription } = req.body;
-
-  const user = await usersService.updateUser({ _id: id }, { subscription });
-
-  res.status(200).json({
-    email: user.email,
-    subscription: user.subscription,
-  });
 };
 
 const updateAvatar = async (req, res) => {
@@ -163,10 +151,9 @@ const updateAvatar = async (req, res) => {
 
 export default {
   register: controllerWrapper(register),
-  signin: controllerWrapper(signin),
-  signout: controllerWrapper(signout),
+  login: controllerWrapper(login),
+  logout: controllerWrapper(logout),
   getCurrent: controllerWrapper(getCurrent),
-  updateSubscription: controllerWrapper(updateSubscription),
   updateAvatar: controllerWrapper(updateAvatar),
   verify: controllerWrapper(verify),
   verifyAgain: controllerWrapper(verifyAgain),
