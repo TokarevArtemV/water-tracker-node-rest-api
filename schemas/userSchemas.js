@@ -1,25 +1,37 @@
 import Joi from "joi";
+import { EMAIL_REGEX , PASSWORD_REGEX} from "../constants/regexPatterns.js";
+import {EMAIL_ERROR_MESSAGES, PASSWORD_ERROR_MESSAGES} from "../constants/userConstants.js";
 
-import { emailRegexp } from "../constans/user-constants.js";
+const emailField = {
+  email: Joi.string()
+  .pattern(EMAIL_REGEX)
+  .required()
+  .messages(EMAIL_ERROR_MESSAGES),
+}
 
-const userRegisterSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required().messages({
-    "string.pattern.base": `The email must be in format water@gmail.com`,
-  }),
-  password: Joi.string().min(8).max(64).required(),
-});
+const passwordField = {
+  password: Joi.string()
+  .min(8)
+  .max(64)
+  .pattern(PASSWORD_REGEX)
+  .required()
+  .messages(PASSWORD_ERROR_MESSAGES),
+};
 
-const userLoginSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required().messages({
-    "string.pattern.base": `The email must be in format water@gmail.com`,
-  }),
-  password: Joi.string().min(8).max(64).required(),
+const authSchema = Joi.object({
+  ...emailField,
+  ...passwordField
 });
 
 const userDataUpdateSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp),
-  password: Joi.string().min(8).max(64),
-  oldPassword: Joi.string().min(8).max(64),
+  ...emailField,
+  ...passwordField,
+  oldPassword: Joi.string()
+  .min(8)
+  .max(64)
+  .pattern(PASSWORD_REGEX)
+  .required()
+  .messages(PASSWORD_ERROR_MESSAGES),
   gender: Joi.string().valid("male", "female"),
   username: Joi.string().max(32),
 });
@@ -29,15 +41,11 @@ const userWaterRateSchema = Joi.object({
 });
 
 const userVerifyEmailSchema = Joi.object({
-  email: Joi.string()
-    .pattern(emailRegexp)
-    .message("Must be a valid email")
-    .required(),
+  ...emailField,
 });
 
 export default {
-  userRegisterSchema,
-  userLoginSchema,
+  authSchema,
   userDataUpdateSchema,
   userWaterRateSchema,
   userVerifyEmailSchema,

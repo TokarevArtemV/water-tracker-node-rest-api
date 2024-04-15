@@ -10,7 +10,7 @@ const userRouter = express.Router();
 
 userRouter.post(
   "/register",
-  validateBody(usersSchemas.userRegisterSchema),
+  validateBody(usersSchemas.authSchema),
   usersControllers.register
 );
 
@@ -24,7 +24,7 @@ userRouter.post(
 
 userRouter.post(
   "/login",
-  validateBody(usersSchemas.userLoginSchema),
+  validateBody(usersSchemas.authSchema),
   usersControllers.login
 );
 
