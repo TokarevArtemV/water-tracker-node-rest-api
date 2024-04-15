@@ -8,11 +8,18 @@ import "dotenv/config.js";
 import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import authenticate from "./middlewares/authenticate.js";
 
-const { PORT = 3000, DB_HOST, BASE_URL_CLIENT } = process.env;
+const { PORT = 3000, DB_HOST } = process.env;
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
+app.use((_, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
 app.use(express.json());
 app.use(express.static("public"));
 
