@@ -1,7 +1,11 @@
 import Joi from "joi";
 
 export const createWaterPortionSchema = Joi.object({
-    waterVolume: Joi.number().max(5000).required(),
+    waterVolume: Joi.number().min(1).max(5000).required(),
     date: Joi.date().required(),
-    owner: Joi.string(),
 });
+
+export const updateWaterPortionSchema = Joi.object({
+    waterVolume: Joi.number().min(1).max(5000),
+    date: Joi.date(),
+}).min(1);
