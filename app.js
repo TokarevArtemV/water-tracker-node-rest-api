@@ -8,11 +8,14 @@ import "dotenv/config.js";
 import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import authenticate from "./middlewares/authenticate.js";
 
-const { PORT = 3000, DB_HOST } = process.env;
+const { PORT = 3000, DB_HOST, BASE_URL_CLIENT } = process.env;
 const app = express();
 
 app.use(morgan("tiny"));
-app.use(cors());
+app.use(cors({
+  origin: [BASE_URL_CLIENT],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.static("public"));
 

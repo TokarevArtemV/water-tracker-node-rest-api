@@ -8,6 +8,7 @@ import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
 import sendEmail from "../helpers/sendEmails.js";
+import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 
 const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT} = process.env;
 
@@ -27,11 +28,7 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const verifyEmail = {
-    to: [email],
-    subject: "Verify email",
-    html: `<a href="${BASE_URL}/api/users/verify/${verificationToken}" target="_blank">Click to verify</a>`,
-  };
+  const verifyEmail = verifyEmailLetter(email, verificationToken);
 
   await sendEmail(verifyEmail);
 
@@ -56,7 +53,7 @@ const verify = async (req, res) => {
     { verify: true, verificationToken: null }
   );
   
-  res.status(302).redirect(`${BASE_URL_CLIENT}/login`);
+  res.status(302).redirect(`${BASE_URL_CLIENT}/signin`);
 };
 
 const verifyAgain = async (req, res) => {
@@ -108,7 +105,10 @@ const login = async (req, res) => {
     token,
     user: {
       email: user.email,
-      subscription: user.subscription,
+      username: user.username,
+      gender: user.gender,
+      avatarURL: user.avatarURL,
+      waterRate: user.waterRate,
     },
   });
 };
