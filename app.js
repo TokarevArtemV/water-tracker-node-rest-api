@@ -16,7 +16,7 @@ app.use(morgan("tiny"));
 app.use(function (req, res, next) {
   // res.header("Access-Control-Allow-Origin", "*");
   const allowedOrigins = [
-    "http://localhost:3000",
+    "http://localhost:5173",
     "https://water-tracker-pi.vercel.app/",
     "https://water-tracker-node-rest-api.onrender.com",
   ];
