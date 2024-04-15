@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
+import { EMAIL_REGEX} from '../constants/regexPatterns.js';
 import hooks from "./hooks.js";
-
-import { emailRegexp } from "../constans/user-constants.js";
 
 const userSchema = new Schema(
   {
@@ -9,7 +8,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Email is required"],
       unique: true,
-      match: emailRegexp,
+      match: EMAIL_REGEX,
     },
     password: {
       type: String,
@@ -53,7 +52,6 @@ const userSchema = new Schema(
 );
 
 userSchema.post("save", hooks.handleSaveError);
-
 userSchema.pre("findOneAndUpdate", hooks.setUpdateSettings);
 userSchema.post("findOneAndUpdate", hooks.handleSaveError);
 

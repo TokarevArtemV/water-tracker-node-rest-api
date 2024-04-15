@@ -9,7 +9,7 @@ import HttpError from "../helpers/HttpError.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
 import sendEmail from "../helpers/sendEmails.js";
 
-const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME } = process.env;
+const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT} = process.env;
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -55,8 +55,8 @@ const verify = async (req, res) => {
     { _id: user._id },
     { verify: true, verificationToken: null }
   );
-
-  res.status(200).json({ message: "Verification successful" });
+  
+  res.status(302).redirect(`${BASE_URL_CLIENT}/login`);
 };
 
 const verifyAgain = async (req, res) => {
