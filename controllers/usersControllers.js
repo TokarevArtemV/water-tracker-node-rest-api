@@ -10,7 +10,7 @@ import controllerWrapper from "../helpers/ctrlWrapper.js";
 import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 
-const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT} = process.env;
+const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -32,8 +32,6 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  console.log(newUser);
-
   res.status(201).json({
     email: newUser.email,
     avatarURL: newUser.avatarURL,
@@ -52,7 +50,7 @@ const verify = async (req, res) => {
     { _id: user._id },
     { verify: true, verificationToken: null }
   );
-  
+
   res.status(302).redirect(`${BASE_URL_CLIENT}/signin`);
 };
 
