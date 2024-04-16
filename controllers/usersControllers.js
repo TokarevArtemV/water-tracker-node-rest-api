@@ -19,11 +19,18 @@ const register = async (req, res) => {
   if (isEmail) throw HttpError(409, "Email in use");
 
   const avatarURL = gravatar.url(email, { r: "pg" }, true);
+  const username = email
+    .split("@")[0]
+    .replace(/[.\|^<>*!,_&+#%]/g, "-")
+    .toLowerCase();
+  const capitalizedUsername =
+    username.charAt(0).toUpperCase() + username.slice(1);
 
   const verificationToken = nanoid();
 
   const newUser = await usersService.register({
     ...req.body,
+    username: capitalizedUsername,
     avatarURL,
     verificationToken,
   });
@@ -34,7 +41,7 @@ const register = async (req, res) => {
 
   res.status(201).json({
     email: newUser.email,
-    avatarURL: newUser.avatarURL,
+    // avatarURL: newUser.avatarURL,
   });
 };
 
