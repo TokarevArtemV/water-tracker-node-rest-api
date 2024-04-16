@@ -12,7 +12,7 @@ const app = express();
 
 app.use(morgan("tiny"));
 
-app.use(customCors());
+app.use(customCors);
 
 app.use(express.json());
 app.use(express.static("public"));
