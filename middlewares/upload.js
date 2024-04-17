@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 });
 
 const limits = {
-  fileSize: 1024 * 1024 * 5,
+  fileSize: 1024 * 1024 * 5, // message
 };
 
 const fileFilter = (req, file, cb) => {
@@ -22,7 +22,18 @@ const fileFilter = (req, file, cb) => {
   if (extension === "exe") {
     return cb(HttpError(400, ".exe not valid extension format"));
   }
-  cb(null, true);
+
+  const filetypes = /jpe?g|png|webp/;
+  const mimetypes = /image\/jpe?g|image\/png|image\/webp/; //svg?
+
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = mimetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    cb(null, true);
+  } else {
+    cb(new Error("Images only!"), false); //HttpError
+  }
 };
 
 const upload = multer({

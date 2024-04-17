@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 
 import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
+import cloudinary from "../helpers/cloudinary.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
 import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
@@ -111,6 +112,7 @@ const login = async (req, res) => {
   });
 };
 
+//---------------GET
 const getCurrent = async (req, res) => {
   const { email, subscription } = req.user;
 
@@ -128,23 +130,38 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
+//---------------UPDATE AVATAR
 const updateAvatar = async (req, res) => {
-  const { _id: id } = req.user;
+  const { _id: id } = req.user; //
 
-  const avatarPath = path.resolve("public", "avatars");
-
-  const { path: oldPathAvatar, filename } = req.file;
-
-  const newPathAvatar = path.join(avatarPath, filename);
-
-  await fs.rename(oldPathAvatar, newPathAvatar);
-  const avatarURL = path.join("avatars", filename);
-
-  const user = await usersService.updateUser({ _id: id }, { avatarURL });
-
-  res.status(200).json({
-    avatarUrl: user.avatarURL,
+  const { url: avatarURL } = await cloudinary.uploader.upload(req.file.path, {
+    folder: "water-tracker-avatars",
   });
+
+  await fs.unlink(req.file.path);
+  const user = await usersService.updateUser(
+    { _id: id },
+    { avatarURL },
+    { new: true }
+  );
+
+  res.status(201).json({
+    message: "Avatar updated successfully",
+    avatarURL,
+  });
+
+  // const avatarPath = path.resolve("public", "avatars");
+
+  // const { path: oldPathAvatar, filename } = req.file;
+
+  // const newPathAvatar = path.join(avatarPath, filename);
+
+  // await fs.rename(oldPathAvatar, newPathAvatar);
+  // const avatarURL = path.join("avatars", filename);
+
+  // res.status(200).json({
+  //   avatarUrl: user.avatarURL,
+  // });
 };
 
 export default {

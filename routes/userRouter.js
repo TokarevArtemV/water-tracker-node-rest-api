@@ -28,10 +28,19 @@ userRouter.post(
   usersControllers.login
 );
 
+//---------
 userRouter.patch(
   "/avatar",
+  // (req, res, next) => {
+  //   console.log(req);
+  //   next();
+  // },
   authenticate,
-  upload.single("avatarURL"),
+  upload.single("avatarURL"), //
+  (req, res, next) => {
+    console.log(req);
+    next();
+  },
   resizeFile,
   usersControllers.updateAvatar
 );

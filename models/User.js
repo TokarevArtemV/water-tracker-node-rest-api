@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { EMAIL_REGEX} from '../constants/regexPatterns.js';
+import { EMAIL_REGEX } from "../constants/regexPatterns.js";
 import hooks from "./hooks.js";
 
 const userSchema = new Schema(
@@ -23,8 +23,12 @@ const userSchema = new Schema(
     },
     username: {
       type: String,
-      maxLength: 32,
-      default: null,
+      maxLength: 32, //
+      default: null, //
+    },
+    avatarURL: {
+      type: String,
+      default: null, //
     },
     waterRate: {
       type: Number,
@@ -32,10 +36,7 @@ const userSchema = new Schema(
       min: 1,
       max: 15000,
     },
-    avatarURL: {
-      type: String,
-      default: null,
-    },
+
     token: {
       type: String,
       default: null,
