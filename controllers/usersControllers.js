@@ -112,11 +112,16 @@ const login = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const user = req.user;
 
   res.json({
-    email,
-    subscription,
+    user: {
+      email: user.email,
+      username: user.username,
+      gender: user.gender,
+      avatarURL: user.avatarURL,
+      waterRate: user.waterRate,
+    },
   });
 };
 
