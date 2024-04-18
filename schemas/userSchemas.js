@@ -47,14 +47,9 @@ const userVerifyEmailSchema = Joi.object({
   ...emailField,
 });
 
-const userTokenSchema = Joi.object({
-  token: Joi.string().required(),
-});
-
 export default {
   authSchema,
   userDataUpdateSchema,
   userWaterRateSchema,
   userVerifyEmailSchema,
-  userTokenSchema,
 };

@@ -28,12 +28,7 @@ userRouter.post(
   usersControllers.login
 );
 
-userRouter.get(
-  "/current",
-  authenticate,
-  validateBody(usersSchemas.userTokenSchema),
-  usersControllers.getCurrent
-);
+userRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 userRouter.patch(
   "/avatar",
