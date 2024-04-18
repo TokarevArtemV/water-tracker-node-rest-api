@@ -28,7 +28,7 @@ userRouter.post(
   usersControllers.login
 );
 
-userRouter.post(
+userRouter.get(
   "/current",
   authenticate,
   validateBody(usersSchemas.userTokenSchema),
@@ -42,8 +42,6 @@ userRouter.patch(
   resizeFile,
   usersControllers.updateAvatar
 );
-
-userRouter.post("/current", authenticate, usersControllers.getCurrent);
 
 userRouter.post("/logout", authenticate, usersControllers.logout);
 
