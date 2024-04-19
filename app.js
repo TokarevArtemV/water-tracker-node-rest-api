@@ -2,10 +2,13 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import authenticate from "./middlewares/authenticate.js";
 import userRouter from "./routes/userRouter.js";
 import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import "dotenv/config.js";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
+
 
 const { PORT = 3000, DB_HOST } = process.env;
 const app = express();
@@ -20,6 +23,8 @@ app.use(express.static("public"));
 app.use("/api/users", userRouter);
 
 app.use("/api/water-portions", authenticate, waterPortionsRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

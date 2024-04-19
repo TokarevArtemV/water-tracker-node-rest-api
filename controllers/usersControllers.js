@@ -3,7 +3,6 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import { nanoid } from "nanoid";
-
 import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
@@ -130,7 +129,9 @@ const logout = async (req, res) => {
 
   await usersService.updateUser({ _id: id }, { token: "" });
 
-  res.status(204).json();
+  res.status(204).json({
+    message: "You logged out successfully",
+  });
 };
 
 const updateAvatar = async (req, res) => {
