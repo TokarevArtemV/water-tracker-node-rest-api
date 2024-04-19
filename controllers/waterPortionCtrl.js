@@ -2,6 +2,7 @@ import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import waterPortionServices from "../services/waterPortionServices.js";
 import HttpError from "../helpers/HttpError.js";
 import { addHours, format } from "date-fns";
+import Water from "../models/Water.js";
 
 const addWaterPortion = async (req, res) => {
   const { _id: owner } = req.user;
@@ -33,31 +34,31 @@ const deleteWaterPortion = async (req, res) => {
 const todayWaterPortion = async (req, res) => {
   const { _id: owner } = req.user;
 
-  const result = await waterPortionServices.todayWaterPortion({ owner });
-  const today = new Date().toUTCString();
-  const today2 = new Date();
-  console.log(today, today2);
-  //   const currentHour = today.getHours();
-  //   today.setHours(currentHour + 3);
-  //   const todayWithAddedHours = today.toUTCString();
-  const formattedDate = format(today, "yyyy-MM-dd");
+  const utcDate = new Date().toUTCString();
+  const startOfDay = new Date(utcDate);
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const endOfDay = new Date(utcDate);
+  endOfDay.setUTCHours(23, 59, 59, 999);
 
-  if (result) {
-    const filteredResult = result.filter(({ date }) => {
-      //   const test = date.toLocaleDateString("uk-UA");
-      //   const updatedDate = addHours(date, -3);
-      const test =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-      const stringDate = format(date, "yyyy-MM-dd-hh");
-      console.log(date, test, formattedDate);
-      return stringDate === formattedDate;
-    });
+  const foundWaterDayData = await Water.find({
+    owner,
+    date: {
+      $gte: startOfDay,
+      $lt: endOfDay,
+    },
+  }).select(`-createdAt -updatedAt`);
 
-    res.json(filteredResult);
+  if (foundWaterDayData.length === 0) {
+    throw HttpError(404, "No notes yet");
   } else {
-    res.status(404).json({ message: "No water portions found for today" });
+    const totalWater = foundWaterDayData.reduce(
+      (total, { waterVolume }) => total + waterVolume,
+      0
+    );
+    const interestWater = (totalWater / 2000) * 100;
+
+    res.json({ ...foundWaterDayData, interest: interestWater });
   }
-  res.json(result);
 };
 
 export default {
