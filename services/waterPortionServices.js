@@ -7,7 +7,7 @@ const updateWaterPortion = (id, data) => Water.findByIdAndUpdate(id, data);
 const deleteWaterPortion = (id) => Water.findByIdAndDelete(id);
 
 export default {
-    addWaterPortion,
-    updateWaterPortion,
-    deleteWaterPortion,
+  addWaterPortion,
+  updateWaterPortion,
+  deleteWaterPortion,
 };
