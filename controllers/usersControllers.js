@@ -152,6 +152,77 @@ const updateAvatar = async (req, res) => {
   });
 };
 
+//---------------------------
+
+const updateUserData = async (req, res, next) => {
+  const { _id: id } = req.user;
+  const { email, username, gender, currentPassword, newPassword } = req.body;
+
+  // const user = req.user; // ?
+
+  const user = await usersService.findUser({ id });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  let updatedUser;
+
+  //-------- compare emails
+  if (email) {
+    const isUserAlreadyExist = await usersService.findUser({
+      email,
+    });
+    if (isUserAlreadyExist) throw HttpError(404, "Email already exist");
+  }
+
+  //--------compare passwords
+  if (currentPassword && newPassword) {
+    if (password === newPassword) {
+      throw HttpError(401, "The new password cannot be equal to the old one");
+    }
+
+    const comparePass = await usersService.validatePassword(
+      currentPassword,
+      user.password
+    );
+    if (!comparePass) throw HttpError(401, "Outdated password is wrong");
+
+    await updatedUser.hashPassword();
+    await updatedUser.save();
+
+    await usersService.updateUser(
+      { id },
+      {
+        email, //чи не можна перезаписати?
+        username,
+        gender,
+        password: newPassword,
+      },
+      { new: true }
+    );
+  } else {
+    updatedUser = await usersService.updateUser(
+      { id },
+      { email, username, gender },
+      { new: true }
+    );
+    if (!updatedUser) {
+      throw HttpError(404);
+    }
+  }
+  res.json({
+    user: {
+      email,
+      username,
+      gender,
+      newPassword, // забрати пілся тестування
+    },
+  });
+};
+
+// email, //чи не можна перезаписати?
+// throw HttpError(401, "Password fields require");
+
 export default {
   register: controllerWrapper(register),
   login: controllerWrapper(login),
@@ -160,4 +231,10 @@ export default {
   updateAvatar: controllerWrapper(updateAvatar),
   verify: controllerWrapper(verify),
   verifyAgain: controllerWrapper(verifyAgain),
+  updateUserData: controllerWrapper(updateUserData),
 };
+
+// "email": "lolita@gmail.com",
+// "currentPassword": "12345678",
+// "newPassword": "123456789",
+// "repeatPassword": "123456789"

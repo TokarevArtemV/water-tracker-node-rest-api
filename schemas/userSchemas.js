@@ -8,7 +8,7 @@ import {
 const emailField = {
   email: Joi.string()
     .pattern(EMAIL_REGEX)
-    .required()
+    // .required()
     .messages(EMAIL_ERROR_MESSAGES),
 };
 
@@ -26,17 +26,32 @@ const authSchema = Joi.object({
   ...passwordField,
 });
 
+//email required() ?
+//всі паролі  required() ??
+
 const userDataUpdateSchema = Joi.object({
   ...emailField,
-  ...passwordField,
-  oldPassword: Joi.string()
+  gender: Joi.string().valid("male", "female"),
+  username: Joi.string().max(32),
+  currentPassword: Joi.string()
     .min(8)
     .max(64)
     .pattern(PASSWORD_REGEX)
-    .required()
+    // .required()
     .messages(PASSWORD_ERROR_MESSAGES),
-  gender: Joi.string().valid("male", "female"),
-  username: Joi.string().max(32),
+  newPassword: Joi.string()
+    .min(8)
+    .max(64)
+    .pattern(PASSWORD_REGEX)
+    // .required()
+    .messages(PASSWORD_ERROR_MESSAGES),
+  // repeatPassword: Joi.string()
+  //   .min(8)
+  //   .max(64)
+  //   .pattern(PASSWORD_REGEX)
+  //   // .required()
+  //   .messages(PASSWORD_ERROR_MESSAGES),
+  //match newPassword? - на фронті походу
 });
 
 const userWaterRateSchema = Joi.object({
