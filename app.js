@@ -9,7 +9,6 @@ import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import "dotenv/config.js";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 
-
 const { PORT = 3000, DB_HOST } = process.env;
 const app = express();
 
@@ -25,6 +24,8 @@ app.use("/api/users", userRouter);
 app.use("/api/water-portions", authenticate, waterPortionsRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use("/api/monthly-data", authenticate, waterPortionsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

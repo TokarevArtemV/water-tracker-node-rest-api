@@ -4,6 +4,8 @@ import isValidId from "../middlewares/isValidId.js";
 import {
   createWaterPortionSchema,
   updateWaterPortionSchema,
+  createWaterPortionSchema,
+  updateWaterPortionSchema,
 } from "../schemas/waterPortionSchemas.js";
 import waterPortionCtrl from "../controllers/waterPortionCtrl.js";
 
@@ -27,6 +29,8 @@ waterPortionsRouter.delete(
   isValidId,
   waterPortionCtrl.deleteWaterPortion
 );
+
+waterPortionsRouter.get("/monthly-data", isValidId);
 
 waterPortionsRouter.get("/today", waterPortionCtrl.todayWaterPortion);
 
