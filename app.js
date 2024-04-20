@@ -25,8 +25,6 @@ app.use("/api/water-portions", authenticate, waterPortionsRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api/monthly-data", authenticate, waterPortionsRouter);
-
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });

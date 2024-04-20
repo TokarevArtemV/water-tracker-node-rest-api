@@ -17,6 +17,11 @@ const waterSchema = new Schema(
       ref: "user",
       required: [true, "Owner is required"],
     },
+    dailyNorm: {
+      type: Number,
+      ref: "user",
+      required: [true, "Daily norm is required"],
+    },
   },
   {
     versionKey: false,
