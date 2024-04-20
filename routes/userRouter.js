@@ -32,9 +32,17 @@ userRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 userRouter.patch(
   "/avatar",
+
   authenticate,
   upload.single("avatarURL"),
-  resizeFile,
+
+  (req, res, next) => {
+    console.log(req.headers);
+    console.log(req.file);
+
+    next();
+  },
+  // resizeFile,
   usersControllers.updateAvatar
 );
 
@@ -42,10 +50,12 @@ userRouter.put(
   "/update",
 
   authenticate,
-  (req, res, next) => {
-    console.log(req.headers);
-    next();
-  },
+  // (req, res, next) => {
+  //   // console.log(req.headers);
+  //   // console.log(req.body.user);
+
+  //   next();
+  // },
   validateBody(usersSchemas.userDataUpdateSchema),
   usersControllers.updateUserData
 );

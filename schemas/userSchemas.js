@@ -33,26 +33,19 @@ const userDataUpdateSchema = Joi.object({
   ...emailField,
   gender: Joi.string().valid("male", "female"),
   username: Joi.string().max(32),
-  currentPassword: Joi.string()
+  password: Joi.string()
     .min(8)
     .max(64)
     .pattern(PASSWORD_REGEX)
-    // .required()
     .messages(PASSWORD_ERROR_MESSAGES),
   newPassword: Joi.string()
     .min(8)
     .max(64)
     .pattern(PASSWORD_REGEX)
-    // .required()
     .messages(PASSWORD_ERROR_MESSAGES),
-  // repeatPassword: Joi.string()
-  //   .min(8)
-  //   .max(64)
-  //   .pattern(PASSWORD_REGEX)
-  //   // .required()
-  //   .messages(PASSWORD_ERROR_MESSAGES),
-  //match newPassword? - на фронті походу
-});
+})
+  .min(1)
+  .message("Body must have at least one field"); //
 
 const userWaterRateSchema = Joi.object({
   waterRate: Joi.number().required().min(1).max(15000),

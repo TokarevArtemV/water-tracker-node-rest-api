@@ -3,6 +3,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import { nanoid } from "nanoid";
+import bcrypt from "bcrypt";
 
 import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
@@ -133,41 +134,57 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
+//---------------------------updateAvatar
 const updateAvatar = async (req, res) => {
-  const { _id: id } = req.user;
+  console.log(req.file.path, "1"); //+
+  const { _id } = req.user;
+  if (!req.file) {
+    throw HttpError(400, "No avatar");
+  }
+  console.log(req.file.path, "2"); //+
 
-  const avatarPath = path.resolve("public", "avatars");
+  const avatarURL = req.file.path;
 
-  const { path: oldPathAvatar, filename } = req.file;
+  const user = await usersService.findUser({ _id });
+  console.log(user);
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
 
-  const newPathAvatar = path.join(avatarPath, filename);
+  await usersService.updateUser({ _id }, { avatarURL });
 
-  await fs.rename(oldPathAvatar, newPathAvatar);
-  const avatarURL = path.join("avatars", filename);
-
-  const user = await usersService.updateUser({ _id: id }, { avatarURL });
+  // user.avatarURL = avatarURL;
+  // user.save();
 
   res.status(200).json({
-    avatarUrl: user.avatarURL,
+    avatarURL,
   });
+
+  // const avatarPath = path.resolve("public", "avatars");
+  // const { path: oldPathAvatar, filename } = req.file;
+  // const newPathAvatar = path.join(avatarPath, filename);
+  // await fs.rename(oldPathAvatar, newPathAvatar);
+
+  // const avatarURL = path.join("avatars", filename);
+  // const user = await usersService.updateUser({ _id }, { avatarURL });
+
+  // res.status(200).json({
+  //   avatarURL: user.avatarURL,
+  // });
 };
 
-//---------------------------
+//---------------------------updateUserData
+const updateUserData = async (req, res, _) => {
+  const { _id } = req.user;
+  const { email, username, gender, password, newPassword } = req.body;
 
-const updateUserData = async (req, res, next) => {
-  const { _id: id } = req.user;
-  const { email, username, gender, currentPassword, newPassword } = req.body;
-
-  // const user = req.user; // ?
-
-  const user = await usersService.findUser({ id });
+  const user = await usersService.findUser({ _id });
   if (!user) {
     throw HttpError(404, "User not found");
   }
 
   let updatedUser;
 
-  //-------- compare emails
   if (email) {
     const isUserAlreadyExist = await usersService.findUser({
       email,
@@ -175,36 +192,31 @@ const updateUserData = async (req, res, next) => {
     if (isUserAlreadyExist) throw HttpError(404, "Email already exist");
   }
 
-  //--------compare passwords
-  if (currentPassword && newPassword) {
+  if (password && newPassword) {
     if (password === newPassword) {
       throw HttpError(401, "The new password cannot be equal to the old one");
     }
-
     const comparePass = await usersService.validatePassword(
-      currentPassword,
+      password,
       user.password
     );
-    if (!comparePass) throw HttpError(401, "Outdated password is wrong");
 
-    await updatedUser.hashPassword();
-    await updatedUser.save();
+    if (!comparePass) throw HttpError(401, "Outdated password is wrong");
+    const hashPass = await bcrypt.hash(newPassword, 10);
 
     await usersService.updateUser(
-      { id },
+      { _id },
       {
-        email, //чи не можна перезаписати?
+        email,
         username,
         gender,
-        password: newPassword,
-      },
-      { new: true }
+        password: hashPass,
+      }
     );
   } else {
     updatedUser = await usersService.updateUser(
-      { id },
-      { email, username, gender },
-      { new: true }
+      { _id },
+      { email, username, gender }
     );
     if (!updatedUser) {
       throw HttpError(404);
@@ -215,13 +227,9 @@ const updateUserData = async (req, res, next) => {
       email,
       username,
       gender,
-      newPassword, // забрати пілся тестування
     },
   });
 };
-
-// email, //чи не можна перезаписати?
-// throw HttpError(401, "Password fields require");
 
 export default {
   register: controllerWrapper(register),
