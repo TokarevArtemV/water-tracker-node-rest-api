@@ -40,13 +40,21 @@ const todayWaterPortion = async (req, res) => {
   const endOfDay = new Date(utcDate);
   endOfDay.setUTCHours(23, 59, 59, 999);
 
-  const foundWaterDayData = await Water.find({
+  //   const foundWaterDayData = await Water.find({
+  //     owner,
+  //     date: {
+  //       $gte: startOfDay,
+  //       $lt: endOfDay,
+  //     },
+  //   }).select(`-createdAt -updatedAt`);
+
+  const foundWaterDayData = await waterPortionServices.getWaterDayData({
     owner,
     date: {
       $gte: startOfDay,
       $lt: endOfDay,
     },
-  }).select(`-createdAt -updatedAt`);
+  });
 
   if (foundWaterDayData.length === 0) {
     throw HttpError(404, "No notes yet");
@@ -57,7 +65,7 @@ const todayWaterPortion = async (req, res) => {
     );
     const interestWater = (totalWater / 2000) * 100;
 
-    res.json({ ...foundWaterDayData, interest: interestWater });
+    res.json({ data: foundWaterDayData, interest: interestWater });
   }
 };
 
@@ -65,5 +73,6 @@ export default {
   addWaterPortion: ctrlWrapper(addWaterPortion),
   updateWaterPortion: ctrlWrapper(updateWaterPortion),
   deleteWaterPortion: ctrlWrapper(deleteWaterPortion),
+  todayWaterPortion: ctrlWrapper(todayWaterPortion),
   todayWaterPortion: ctrlWrapper(todayWaterPortion),
 };
