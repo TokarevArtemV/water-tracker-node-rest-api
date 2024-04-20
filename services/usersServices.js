@@ -17,10 +17,13 @@ const validatePassword = async (password, hashPassword) =>
 
 const deleteUsers = async (filter) => User.deleteMany(filter);
 
+const waterRateDay = async (id, data) => User.findByIdAndUpdate(id, data);
+
 export default {
   register,
   findUser,
   updateUser,
   validatePassword,
   deleteUsers,
+  waterRateDay,
 };

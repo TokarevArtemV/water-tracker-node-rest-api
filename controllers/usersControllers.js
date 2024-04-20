@@ -153,6 +153,14 @@ const updateAvatar = async (req, res) => {
   });
 };
 
+const waterRate = async (req, res) => {
+  const { _id: id } = req.user;
+
+  const result = await usersService.waterRateDay({ _id: id }, req.body);
+
+  res.status(200).json({ waterRate: result.waterRate });
+};
+
 export default {
   register: controllerWrapper(register),
   login: controllerWrapper(login),
@@ -161,4 +169,5 @@ export default {
   updateAvatar: controllerWrapper(updateAvatar),
   verify: controllerWrapper(verify),
   verifyAgain: controllerWrapper(verifyAgain),
+  waterRate: controllerWrapper(waterRate),
 };

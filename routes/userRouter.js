@@ -40,4 +40,11 @@ userRouter.patch(
 
 userRouter.post("/logout", authenticate, usersControllers.logout);
 
+userRouter.patch(
+  "/waterRate",
+  authenticate,
+  validateBody(usersSchemas.userWaterRateSchema),
+  usersControllers.waterRate
+);
+
 export default userRouter;
