@@ -49,7 +49,7 @@ const todayWaterPortion = async (req, res) => {
   }).select(`-createdAt -updatedAt`);
 
   if (foundWaterDayData.length === 0) {
-    throw HttpError(404, "No notes yet");
+    throw HttpError(200, "No notes yet");
   } else {
     const totalWater = foundWaterDayData.reduce(
       (total, { waterVolume }) => total + waterVolume,
