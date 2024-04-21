@@ -1,8 +1,6 @@
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import waterPortionServices from "../services/waterPortionServices.js";
 import HttpError from "../helpers/HttpError.js";
-import { addHours, format } from "date-fns";
-import Water from "../models/Water.js";
 
 const addWaterPortion = async (req, res) => {
   const { _id: owner, waterRate: dailyNorm } = req.user;
@@ -41,13 +39,13 @@ const todayWaterPortion = async (req, res) => {
   const endOfDay = new Date(utcDate);
   endOfDay.setUTCHours(23, 59, 59, 999);
 
-  const foundWaterDayData = await Water.find({
+  const foundWaterDayData = await waterPortionServices.getWaterDayData({
     owner,
     date: {
       $gte: startOfDay,
       $lt: endOfDay,
     },
-  }).select(`-createdAt -updatedAt`);
+  });
 
   if (foundWaterDayData.length === 0) {
     throw HttpError(404, "No notes yet");
@@ -58,7 +56,7 @@ const todayWaterPortion = async (req, res) => {
     );
     const interestWater = (totalWater / 2000) * 100;
 
-    res.json({ ...foundWaterDayData, interest: interestWater });
+    res.json({ data: foundWaterDayData, interest: interestWater });
   }
 };
 
