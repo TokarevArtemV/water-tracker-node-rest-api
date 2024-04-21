@@ -40,4 +40,10 @@ userRouter.patch(
 
 userRouter.post("/logout", authenticate, usersControllers.logout);
 
+userRouter.post("/reset-password", validateBody(usersSchemas.userVerifyEmailSchema), usersControllers.verifyResetPasswordEmail);
+
+userRouter.get("/reset-password/:verificationToken", usersControllers.resetLink);
+
+userRouter.patch("/reset-password", validateBody(usersSchemas.authSchema), usersControllers.resetPassword);
+
 export default userRouter;

@@ -5,6 +5,7 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import authenticate from "./middlewares/authenticate.js";
 import userRouter from "./routes/userRouter.js";
+import googleRouter from "./routes/googleRouter.js";
 import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import "dotenv/config.js";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
@@ -21,6 +22,8 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/users", userRouter);
+
+app.use("/api/auth", googleRouter);
 
 app.use("/api/water-portions", authenticate, waterPortionsRouter);
 
