@@ -11,7 +11,7 @@ const addWaterPortion = async (req, res) => {
   });
   res.status(201).json({
     id: result._id,
-    portion: result.waterVolume,
+    waterVolume: result.waterVolume,
     date: result.date,
   });
 };
