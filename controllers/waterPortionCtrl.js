@@ -31,6 +31,7 @@ const deleteWaterPortion = async (req, res) => {
 
 const todayWaterPortion = async (req, res) => {
   const { _id: owner } = req.user;
+  const { waterRate } = req.user;
 
   const utcDate = new Date().toUTCString();
   const startOfDay = new Date(utcDate);
@@ -53,7 +54,8 @@ const todayWaterPortion = async (req, res) => {
       (total, { waterVolume }) => total + waterVolume,
       0
     );
-    const interestWater = (totalWater / 2000) * 100;
+
+    const interestWater = (totalWater / waterRate) * 100;
 
     res.json({ data: foundWaterDayData, interest: interestWater });
   }
