@@ -130,10 +130,10 @@ const monthlyWaterPortion = async (req, res) => {
 
     const dailyNorm = filteredData[filteredData.length - 1].dailyNorm;
     const dailyData = {
-      date: recordDate,
+      date: format(recordDate, "d, MMMM"),
       percent: `${(waterSum / dailyNorm) * 100}%`,
       quantity: filteredData.length,
-      dailyNorm,
+      dailyNorm: `${dailyNorm / 1000}L`,
     };
     monthlyData.push(dailyData);
   }
