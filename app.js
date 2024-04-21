@@ -10,7 +10,6 @@ import waterPortionsRouter from "./routes/waterPortionsRouter.js";
 import "dotenv/config.js";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 
-
 const { PORT = 3000, DB_HOST } = process.env;
 const app = express();
 

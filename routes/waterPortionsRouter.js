@@ -30,4 +30,6 @@ waterPortionsRouter.delete(
 
 waterPortionsRouter.get("/today", waterPortionCtrl.todayWaterPortion);
 
+waterPortionsRouter.get("/month", waterPortionCtrl.monthlyWaterPortion);
+
 export default waterPortionsRouter;
