@@ -40,10 +40,28 @@ userRouter.patch(
 
 userRouter.post("/logout", authenticate, usersControllers.logout);
 
-userRouter.post("/reset-password", validateBody(usersSchemas.userVerifyEmailSchema), usersControllers.verifyResetPasswordEmail);
+userRouter.post(
+  "/reset-password",
+  validateBody(usersSchemas.userVerifyEmailSchema),
+  usersControllers.verifyResetPasswordEmail
+);
 
-userRouter.get("/reset-password/:verificationToken", usersControllers.resetLink);
+userRouter.get(
+  "/reset-password/:verificationToken",
+  usersControllers.resetLink
+);
 
-userRouter.patch("/reset-password", validateBody(usersSchemas.authSchema), usersControllers.resetPassword);
+userRouter.patch(
+  "/reset-password",
+  validateBody(usersSchemas.authSchema),
+  usersControllers.resetPassword
+);
+
+userRouter.patch(
+  "/waterRate",
+  authenticate,
+  validateBody(usersSchemas.userWaterRateSchema),
+  usersControllers.waterRate
+);
 
 export default userRouter;

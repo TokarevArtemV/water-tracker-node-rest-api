@@ -167,7 +167,7 @@ const verifyResetPasswordEmail = async (req, res) => {
     {
       verificationToken,
       tokenResetExpirationTime,
-      verify:true,
+      verify: true,
     }
   );
 
@@ -176,7 +176,9 @@ const verifyResetPasswordEmail = async (req, res) => {
   const verifyEmail = passwordRecoveryLetter(email, verificationToken);
   await sendEmail(verifyEmail);
 
-  res.status(200).json({ message: "Password reset link has been sent to your email" });
+  res
+    .status(200)
+    .json({ message: "Password reset link has been sent to your email" });
 };
 
 const resetLink = async (req, res) => {
@@ -189,16 +191,16 @@ const resetLink = async (req, res) => {
 
   const currentTime = Date.now();
 
-  if (user.tokenResetExpirationTime && currentTime > user.tokenResetExpirationTime) {
+  if (
+    user.tokenResetExpirationTime &&
+    currentTime > user.tokenResetExpirationTime
+  ) {
     throw HttpError(400, "Reset token has expired");
   }
 
   await usersService.updateUser(
     { _id: user._id },
-    { verify: true, 
-      verificationToken: null,
-      tokenResetExpirationTime: null, 
-    }
+    { verify: true, verificationToken: null, tokenResetExpirationTime: null }
   );
   res.status(302).redirect(`${BASE_URL_CLIENT}/new-password/password`);
 };
@@ -227,7 +229,17 @@ const resetPassword = async (req, res) => {
     throw HttpError(400, "Failed to update password.");
   }
 
-  res.status(200).json({ message: "Password reset operation completed successfully." });
+  res
+    .status(200)
+    .json({ message: "Password reset operation completed successfully." });
+};
+
+const waterRate = async (req, res) => {
+  const { _id: id } = req.user;
+
+  const result = await usersService.waterRateDay({ _id: id }, req.body);
+
+  res.status(200).json({ waterRate: result.waterRate });
 };
 
 export default {
@@ -241,4 +253,5 @@ export default {
   verifyResetPasswordEmail: controllerWrapper(verifyResetPasswordEmail),
   resetLink: controllerWrapper(resetLink),
   resetPassword: controllerWrapper(resetPassword),
+  waterRate: controllerWrapper(waterRate),
 };
