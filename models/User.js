@@ -47,6 +47,10 @@ const userSchema = new Schema(
     verificationToken: {
       type: String,
     },
+    tokenResetExpirationTime: {
+      type: Date,
+      default: null,
+    },
   },
   { versionKey: false, timestamps: true }
 );

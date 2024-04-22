@@ -47,4 +47,28 @@ userRouter.put(
   usersControllers.updateUserData
 );
 
+userRouter.post(
+  "/reset-password",
+  validateBody(usersSchemas.userVerifyEmailSchema),
+  usersControllers.verifyResetPasswordEmail
+);
+
+userRouter.get(
+  "/reset-password/:verificationToken",
+  usersControllers.resetLink
+);
+
+userRouter.patch(
+  "/reset-password",
+  validateBody(usersSchemas.authSchema),
+  usersControllers.resetPassword
+);
+
+userRouter.patch(
+  "/waterRate",
+  authenticate,
+  validateBody(usersSchemas.userWaterRateSchema),
+  usersControllers.waterRate
+);
+
 export default userRouter;

@@ -4,7 +4,7 @@ export const EMAIL_ERROR_MESSAGES = {
 };
 
 export const PASSWORD_ERROR_MESSAGES = {
-  'string.min': 'Password must be at least {#key}  characters long',
-  'string.max': 'Password must be less than or equal to {#key}  characters long',
+  'string.min': 'Password must be at least 8 characters long',
+  'string.max': 'Password must be less than or equal to 64 characters long',
   'any.required': 'Password is a required field',
 };
