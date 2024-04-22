@@ -10,8 +10,9 @@
     }
   },
   "servers": [
+    { "url": "http://localhost:3000" },
     { "url": "http://localhost:5000" },
-    { "url": "https://water-tracker-node-rest-api.onrender.com" } 
+    { "url": "https://water-tracker-node-rest-api.onrender.com" }
   ],
   "tags": [
     {
@@ -106,7 +107,7 @@
           "404": {
             "description": "Email not verified",
             "content": {}
-          } 
+          }
         }
       }
     },
@@ -139,7 +140,7 @@
             "description": "Verification token associated with the user's email",
             "schema": {
               "type": "string"
-            } 
+            }
           }
         ],
         "responses": {
@@ -184,9 +185,7 @@
                     "description": "User's email"
                   }
                 },
-                "required": [
-                  "email"
-                ]
+                "required": ["email"]
               },
               "example": {
                 "email": "example@example.com"
@@ -216,16 +215,135 @@
           }
         }
       }
+    },
+    "/api/water-portions": {
+      "post": {
+        "tags": ["Water"],
+        "summary": "Add water portion and time by user",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Object which containes water volume and date ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addWaterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addWaterResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad Request" },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/water-portions/{id}": {
+      "put": {
+        "tags": ["Water"],
+        "summary": "Edit water portion and time by user",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Water portion id"
+          }
+        ],
+        "requestBody": {
+          "description": "Object ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addWaterRequest"
+              },
+              "example": {
+                "waterVolume": 143,
+                "date": "2024-04-20T19:43:58.583Z"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addWaterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Water"],
+        "summary": "Delete water portion and time by user",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Water portion id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
+
   "components": {
     "schemas": {
       "authSchema": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
@@ -282,10 +400,7 @@
               "gender": {
                 "type": "string",
                 "description": "Gender",
-                "enum": [
-                  "woman",
-                  "man"
-                ],
+                "enum": ["woman", "man"],
                 "example": "men"
               },
               "waterRate": {
@@ -301,15 +416,64 @@
             }
           }
         }
+      },
+      "addWaterRequest": {
+        "type": "object",
+        "required": ["date", "waterVolume"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Recording time",
+            "example": "2024-04-20T19:43:58.583Z"
+          },
+          "waterVolume": {
+            "type": "number",
+            "description": "Volume of water recorded by the user",
+            "example": "143"
+          }
+        }
+      },
+      "addWaterResponse": {
+        "type": "object",
+        "items": {
+          "type": "object",
+          "properties": {
+            "waterVolume": {
+              "type": "number",
+              "description": "Volume of water recorded by the user",
+              "example": "143"
+            },
+            "date": {
+              "type": "string",
+              "description": "Recording time",
+              "example": "2024-04-20T19:43:58.583Z"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Owner of the entered data",
+              "example": "661d611659151681f4efe804"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Id of the entered data",
+              "example": "66241b0b9546fc64382d529a"
+            }
+          }
+        },
+        "example": {
+          "waterVolume": "143",
+          "date": "2024-04-20T19:43:58.583Z",
+          "owner": "661d611659151681f4efe804",
+          "_id": "66241b0b9546fc64382d529a"
+        }
       }
     },
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
-
+}
