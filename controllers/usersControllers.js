@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
-import bcrypt from "bcrypt";
 
 import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";

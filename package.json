@@ -9,6 +9,7 @@
     "@elasticemail/elasticemail-client": "^4.0.23",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.2.0",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",
