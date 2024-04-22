@@ -107,9 +107,7 @@ const monthlyWaterPortion = async (req, res) => {
 
   for (let day = 2; day <= lastDay + 1; day++) {
     const recordDate = new Date(
-      startOfMonth.getFullYear(),
-      startOfMonth.getMonth(),
-      day
+      Date.UTC(startOfMonth.getFullYear(), startOfMonth.getMonth(), day)
     );
     const filteredData = foundWaterMonthData.filter(
       (record) =>
