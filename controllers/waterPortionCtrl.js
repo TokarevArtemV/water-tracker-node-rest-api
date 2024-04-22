@@ -107,9 +107,7 @@ const monthlyWaterPortion = async (req, res) => {
 
   for (let day = 2; day <= lastDay + 1; day++) {
     const recordDate = new Date(
-      startOfMonth.getFullYear(),
-      startOfMonth.getMonth(),
-      day
+      Date.UTC(startOfMonth.getFullYear(), startOfMonth.getMonth(), day)
     );
     const filteredData = foundWaterMonthData.filter(
       (record) =>
@@ -133,7 +131,7 @@ const monthlyWaterPortion = async (req, res) => {
     const dailyNorm = filteredData[filteredData.length - 1].dailyNorm;
     const dailyData = {
       date: format(recordDate, "d, MMMM"),
-      percent: `${(waterSum / dailyNorm) * 100}%`,
+      percent: `${Math.round((waterSum / dailyNorm) * 100)}%`,
       quantity: filteredData.length,
       dailyNorm: `${dailyNorm / 1000}L`,
     };
