@@ -30,15 +30,22 @@ userRouter.post(
 
 userRouter.get("/current", authenticate, usersControllers.getCurrent);
 
+userRouter.post("/logout", authenticate, usersControllers.logout);
+
 userRouter.patch(
   "/avatar",
   authenticate,
   upload.single("avatarURL"),
-  resizeFile,
+  // resizeFile,
   usersControllers.updateAvatar
 );
 
-userRouter.post("/logout", authenticate, usersControllers.logout);
+userRouter.put(
+  "/update",
+  authenticate,
+  validateBody(usersSchemas.userDataUpdateSchema),
+  usersControllers.updateUserData
+);
 
 userRouter.post(
   "/reset-password",

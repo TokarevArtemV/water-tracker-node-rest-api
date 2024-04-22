@@ -8,7 +8,7 @@ import {
 const emailField = {
   email: Joi.string()
     .pattern(EMAIL_REGEX)
-    .required()
+    // .required()
     .messages(EMAIL_ERROR_MESSAGES),
 };
 
@@ -28,16 +28,21 @@ const authSchema = Joi.object({
 
 const userDataUpdateSchema = Joi.object({
   ...emailField,
-  ...passwordField,
-  oldPassword: Joi.string()
+  gender: Joi.string().valid("male", "female"),
+  username: Joi.string().max(32),
+  password: Joi.string()
     .min(8)
     .max(64)
     .pattern(PASSWORD_REGEX)
-    .required()
     .messages(PASSWORD_ERROR_MESSAGES),
-  gender: Joi.string().valid("male", "female"),
-  username: Joi.string().max(32),
-});
+  newPassword: Joi.string()
+    .min(8)
+    .max(64)
+    .pattern(PASSWORD_REGEX)
+    .messages(PASSWORD_ERROR_MESSAGES),
+})
+  .min(1)
+  .message("Body must have at least one field");
 
 const userWaterRateSchema = Joi.object({
   waterRate: Joi.number().required().min(1).max(15000),

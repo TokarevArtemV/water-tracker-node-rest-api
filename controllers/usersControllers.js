@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
+import bcrypt from "bcrypt";
+
 import usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
@@ -137,21 +139,18 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id: id } = req.user;
-
-  const avatarPath = path.resolve("public", "avatars");
-
-  const { path: oldPathAvatar, filename } = req.file;
-
-  const newPathAvatar = path.join(avatarPath, filename);
-
-  await fs.rename(oldPathAvatar, newPathAvatar);
-  const avatarURL = path.join("avatars", filename);
-
-  const user = await usersService.updateUser({ _id: id }, { avatarURL });
-
-  res.status(200).json({
-    avatarUrl: user.avatarURL,
+  const { _id } = req.user;
+  const user = await usersService.findUser({ _id });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  if (!req.file) {
+    throw HttpError(400, "No avatar");
+  }
+  const avatarURL = req.file.path;
+  await usersService.updateUser({ _id }, { avatarURL });
+  res.json({
+    avatarURL,
   });
 };
 
@@ -242,6 +241,63 @@ const waterRate = async (req, res) => {
   res.status(200).json({ waterRate: result.waterRate });
 };
 
+const updateUserData = async (req, res) => {
+  const { _id } = req.user;
+  const { email, username, gender, password, newPassword } = req.body;
+
+  const user = await usersService.findUser({ _id });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  let updatedUser;
+
+  // if (email === "") throw HttpError(401, "Enter a new email");
+
+  if (email) {
+    const isUserAlreadyExist = await usersService.findUser({
+      email,
+    });
+    if (isUserAlreadyExist) throw HttpError(404, "Email already exist");
+  }
+
+  if (password && newPassword) {
+    if (password === newPassword) {
+      throw HttpError(401, "The new password cannot be equal to the old one");
+    }
+    const comparePass = await usersService.validatePassword(
+      password,
+      user.password
+    );
+
+    if (!comparePass) throw HttpError(401, "Outdated password is wrong");
+    const hashPass = await bcrypt.hash(newPassword, 10);
+
+    await usersService.updateUser(
+      { _id },
+      {
+        email,
+        username,
+        gender,
+        password: hashPass,
+      }
+    );
+  } else {
+    updatedUser = await usersService.updateUser(
+      { _id },
+      { email, username, gender }
+    );
+    if (!updatedUser) {
+      throw HttpError(404);
+    }
+  }
+  res.json({
+    user: {
+      email,
+      username,
+      gender,
+    },
+  });
+};
 export default {
   register: controllerWrapper(register),
   login: controllerWrapper(login),
@@ -254,4 +310,5 @@ export default {
   resetLink: controllerWrapper(resetLink),
   resetPassword: controllerWrapper(resetPassword),
   waterRate: controllerWrapper(waterRate),
+  updateUserData: controllerWrapper(updateUserData),
 };
