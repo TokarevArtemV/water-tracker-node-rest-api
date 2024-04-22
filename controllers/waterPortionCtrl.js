@@ -12,7 +12,7 @@ const addWaterPortion = async (req, res) => {
     dailyNorm,
   });
   res.status(201).json({
-    id: result._id,
+    _id: result._id,
     waterVolume: result.waterVolume,
     date: result.date,
   });
@@ -51,7 +51,7 @@ const todayWaterPortion = async (req, res) => {
   });
 
   if (foundWaterDayData.length === 0) {
-    throw HttpError(200, "No notes yet");
+    res.json({ data: [], interest: 0 });
   } else {
     const totalWater = foundWaterDayData.reduce(
       (total, { waterVolume }) => total + waterVolume,
