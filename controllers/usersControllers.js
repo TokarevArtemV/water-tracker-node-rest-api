@@ -1,5 +1,3 @@
-import * as fs from "fs/promises";
-import path from "path";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import bcrypt from "bcrypt";
