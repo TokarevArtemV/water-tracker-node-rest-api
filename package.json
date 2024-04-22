@@ -25,6 +25,7 @@
     "nanoid": "^5.0.7",
     "nodemailer": "^6.9.13",
     "query-string": "^9.0.0",
+    "cloudinary": "^2.2.0",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
