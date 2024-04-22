@@ -114,6 +114,7 @@ const login = async (req, res) => {
 
 const getCurrent = async (req, res) => {
   const user = req.user;
+  console.log(user);
 
   res.json({
     user: {
@@ -134,47 +135,23 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
-//---------------------------updateAvatar
 const updateAvatar = async (req, res) => {
-  console.log(req.file.path, "1"); //+
   const { _id } = req.user;
-  if (!req.file) {
-    throw HttpError(400, "No avatar");
-  }
-  console.log(req.file.path, "2"); //+
-
-  const avatarURL = req.file.path;
-
   const user = await usersService.findUser({ _id });
-  console.log(user);
   if (!user) {
     throw HttpError(404, "User not found");
   }
-
+  if (!req.file) {
+    throw HttpError(400, "No avatar");
+  }
+  const avatarURL = req.file.path;
   await usersService.updateUser({ _id }, { avatarURL });
-
-  // user.avatarURL = avatarURL;
-  // user.save();
-
-  res.status(200).json({
+  res.json({
     avatarURL,
   });
-
-  // const avatarPath = path.resolve("public", "avatars");
-  // const { path: oldPathAvatar, filename } = req.file;
-  // const newPathAvatar = path.join(avatarPath, filename);
-  // await fs.rename(oldPathAvatar, newPathAvatar);
-
-  // const avatarURL = path.join("avatars", filename);
-  // const user = await usersService.updateUser({ _id }, { avatarURL });
-
-  // res.status(200).json({
-  //   avatarURL: user.avatarURL,
-  // });
 };
 
-//---------------------------updateUserData
-const updateUserData = async (req, res, _) => {
+const updateUserData = async (req, res) => {
   const { _id } = req.user;
   const { email, username, gender, password, newPassword } = req.body;
 
@@ -182,8 +159,9 @@ const updateUserData = async (req, res, _) => {
   if (!user) {
     throw HttpError(404, "User not found");
   }
-
   let updatedUser;
+
+  // if (email === "") throw HttpError(401, "Enter a new email");
 
   if (email) {
     const isUserAlreadyExist = await usersService.findUser({
@@ -241,8 +219,3 @@ export default {
   verifyAgain: controllerWrapper(verifyAgain),
   updateUserData: controllerWrapper(updateUserData),
 };
-
-// "email": "lolita@gmail.com",
-// "currentPassword": "12345678",
-// "newPassword": "123456789",
-// "repeatPassword": "123456789"

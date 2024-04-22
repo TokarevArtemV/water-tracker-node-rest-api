@@ -1,6 +1,4 @@
 import multer from "multer";
-// import path from "path";
-// import HttpError from "../helpers/HttpError.js";
 import * as cloudinary from "cloudinary";
 
 import { CloudinaryStorage } from "multer-storage-cloudinary";
@@ -24,6 +22,8 @@ const storage = new CloudinaryStorage({
     allowedFormats: ["jpeg", "png", "jpg"],
   },
 
+  //id юзера ?
+
   // params: async (req, file) => {
   //   // Determine the folder based on file properties or request data
   //   let folder;
@@ -46,6 +46,11 @@ const storage = new CloudinaryStorage({
   // },
 });
 
+const upload = multer({ storage });
+
+export default upload;
+
+//------------------
 // const storage = new CloudinaryStorage({
 //   cloudinary: cloudinary,
 //   params: async (req, file) => {
@@ -63,11 +68,6 @@ const storage = new CloudinaryStorage({
 //   },
 // });
 
-const upload = multer({ storage });
-
-export default upload;
-
-//------------------
 // const destination = path.resolve("temp");
 
 // const storage = multer.diskStorage({

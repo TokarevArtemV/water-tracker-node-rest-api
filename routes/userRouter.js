@@ -30,36 +30,21 @@ userRouter.post(
 
 userRouter.get("/current", authenticate, usersControllers.getCurrent);
 
+userRouter.post("/logout", authenticate, usersControllers.logout);
+
 userRouter.patch(
   "/avatar",
-
   authenticate,
   upload.single("avatarURL"),
-
-  (req, res, next) => {
-    console.log(req.headers);
-    console.log(req.file);
-
-    next();
-  },
   // resizeFile,
   usersControllers.updateAvatar
 );
 
 userRouter.put(
   "/update",
-
   authenticate,
-  // (req, res, next) => {
-  //   // console.log(req.headers);
-  //   // console.log(req.body.user);
-
-  //   next();
-  // },
   validateBody(usersSchemas.userDataUpdateSchema),
   usersControllers.updateUserData
 );
-
-userRouter.post("/logout", authenticate, usersControllers.logout);
 
 export default userRouter;

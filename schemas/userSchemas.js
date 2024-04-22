@@ -26,9 +26,6 @@ const authSchema = Joi.object({
   ...passwordField,
 });
 
-//email required() ?
-//всі паролі  required() ??
-
 const userDataUpdateSchema = Joi.object({
   ...emailField,
   gender: Joi.string().valid("male", "female"),
@@ -45,7 +42,7 @@ const userDataUpdateSchema = Joi.object({
     .messages(PASSWORD_ERROR_MESSAGES),
 })
   .min(1)
-  .message("Body must have at least one field"); //
+  .message("Body must have at least one field");
 
 const userWaterRateSchema = Joi.object({
   waterRate: Joi.number().required().min(1).max(15000),
