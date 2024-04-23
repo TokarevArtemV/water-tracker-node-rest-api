@@ -45,7 +45,7 @@ export const passwordRecoveryLetter = (email, verificationToken) => {
             <h1 class="title">Water Tracker App</h1>
             <h6 class="subtitle"></h6>
             <p>Trouble accessing your Water Tracker account? No problem, we're here to help. Select the button below to reset your password. The link is valid for 2 hours.</p>
-            <a class="button" href="${process.env.BASE_URL}/api/users/reset-password/${verificationToken}">Reset Password</a>
+            <a class="button" href="${process.env.BASE_URL_CLIENT}/reset-password/${verificationToken}">Reset Password</a>
             <p By resetting your password, you'll also confirm your email associated with the account.</p>
             <p If you didn't request this reset, you can safely ignore this email.</p>
             <div class="signature">Happy Listening,</div>
