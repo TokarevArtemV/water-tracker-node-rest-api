@@ -57,7 +57,7 @@ const todayWaterPortion = async (req, res) => {
       (total, { waterVolume }) => total + waterVolume,
       0
     );
-
+    console.log(waterRate);
     const interestWater = (totalWater / waterRate) * 100;
 
     res.json({ data: foundWaterDayData, interest: interestWater });
