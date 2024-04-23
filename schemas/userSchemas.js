@@ -52,9 +52,14 @@ const userVerifyEmailSchema = Joi.object({
   ...emailField,
 });
 
+const userPasswordSchema = Joi.object({
+  ...passwordField,
+});
+
 export default {
   authSchema,
   userDataUpdateSchema,
+  userPasswordSchema,
   userWaterRateSchema,
   userVerifyEmailSchema,
 };

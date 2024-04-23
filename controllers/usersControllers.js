@@ -10,7 +10,7 @@ import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 import { passwordRecoveryLetter } from "../helpers/passwordRecoveryLetter.js";
 
-const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
+const { JWT_SECRET, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -69,7 +69,7 @@ const verifyAgain = async (req, res) => {
   const reverifyEmail = {
     to: [email, SEND_MAIL_FROME],
     subject: "Verify email",
-    html: `<a href="${BASE_URL}/api/users/verify/${user.verificationToken}" target="_blank">Click to verify</a>`,
+    html: `<a href="${BASE_URL_CLIENT}/api/users/verify/${user.verificationToken}" target="_blank">Click to verify</a>`,
   };
 
   await sendEmail(reverifyEmail);
@@ -163,7 +163,7 @@ const verifyResetPasswordEmail = async (req, res) => {
     {
       verificationToken,
       tokenResetExpirationTime,
-      verify: true,
+      verify:true,
     }
   );
 
@@ -172,68 +172,60 @@ const verifyResetPasswordEmail = async (req, res) => {
   const verifyEmail = passwordRecoveryLetter(email, verificationToken);
   await sendEmail(verifyEmail);
 
-  res
-    .status(200)
-    .json({ message: "Password reset link has been sent to your email" });
-};
-
-const resetLink = async (req, res) => {
-  const { verificationToken } = req.params;
-  const user = await usersService.findUser({
-    verificationToken,
-  });
-
-  if (!user) throw HttpError(404, "User not found");
-
-  const currentTime = Date.now();
-
-  if (
-    user.tokenResetExpirationTime &&
-    currentTime > user.tokenResetExpirationTime
-  ) {
-    throw HttpError(400, "Reset token has expired");
-  }
-
-  await usersService.updateUser(
-    { _id: user._id },
-    { verify: true, verificationToken: null, tokenResetExpirationTime: null }
-  );
-  res.status(302).redirect(`${BASE_URL_CLIENT}/new-password/password`);
+  res.status(200).json({ message: "Password reset link has been sent to your email" });
 };
 
 const resetPassword = async (req, res) => {
-  const { email, password } = req.body;
+  const { verificationToken } = req.params;
+  const { password } = req.body;
 
-  if (!password) {
-    throw HttpError(400, "Invalid new password.");
-  }
-
-  const user = await usersService.findUser({ email });
-
+  const user = await usersService.findUser({ verificationToken });
   if (!user) {
-    throw HttpError(404, "User not found.");
+    throw HttpError(401, "Verification token is wrong");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const currentTime = Date.now();
 
-  const updatedUser = await usersService.updateUser(
+  if (user.tokenResetExpirationTime && currentTime > user.tokenResetExpirationTime) {
+    throw HttpError(400, "Reset token has expired");
+  }
+  
+  const hashPassword = await bcrypt.hash(password, 10);
+  await usersService.updateUser(
     { _id: user._id },
-    { password: hashedPassword }
+    { 
+      password: hashPassword,
+      verify: true, 
+      verificationToken: null,
+      tokenResetExpirationTime: null, 
+    }
   );
-
-  if (!updatedUser) {
-    throw HttpError(400, "Failed to update password.");
-  }
-
-  res
-    .status(200)
-    .json({ message: "Password reset operation completed successfully." });
+  
+res.status(201).json({
+  message: "Password reset operation completed successfully."
+});
 };
+
 
 const waterRate = async (req, res) => {
   const { _id: id } = req.user;
 
   const result = await usersService.waterRateDay({ _id: id }, req.body);
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const waterRate = req.body.waterRate;
+
+  await usersService.waterRateForTodayRecords(
+    id,
+    startOfDay,
+    endOfDay,
+    waterRate
+  );
 
   res.status(200).json({ waterRate: result.waterRate });
 };
@@ -304,7 +296,6 @@ export default {
   verify: controllerWrapper(verify),
   verifyAgain: controllerWrapper(verifyAgain),
   verifyResetPasswordEmail: controllerWrapper(verifyResetPasswordEmail),
-  resetLink: controllerWrapper(resetLink),
   resetPassword: controllerWrapper(resetPassword),
   waterRate: controllerWrapper(waterRate),
   updateUserData: controllerWrapper(updateUserData),

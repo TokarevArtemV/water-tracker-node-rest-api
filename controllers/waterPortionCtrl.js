@@ -1,7 +1,7 @@
+import { format } from "date-fns";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import waterPortionServices from "../services/waterPortionServices.js";
 import HttpError from "../helpers/HttpError.js";
-import { format } from "date-fns";
 import Water from "../models/Water.js";
 
 const addWaterPortion = async (req, res) => {
@@ -121,12 +121,6 @@ const monthlyWaterPortion = async (req, res) => {
       (acc, record) => acc + Number(record.waterVolume),
       0
     );
-
-    filteredData.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return dateA - dateB;
-    });
 
     const dailyNorm = filteredData[filteredData.length - 1].dailyNorm;
     const dailyData = {
