@@ -10,8 +10,6 @@ import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 import { passwordRecoveryLetter } from "../helpers/passwordRecoveryLetter.js";
 
-import Water from "../models/Water.js";
-
 const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
 
 const register = async (req, res) => {
