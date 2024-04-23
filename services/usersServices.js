@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 
 import User from "../models/User.js";
+import Water from "../models/Water.js";
 
 const findUser = (filter) => User.findOne(filter);
 
@@ -19,6 +20,12 @@ const deleteUsers = async (filter) => User.deleteMany(filter);
 
 const waterRateDay = async (id, data) => User.findByIdAndUpdate(id, data);
 
+const waterRateForTodayRecords = async (id, startOfDay, endOfDay, waterRate) =>
+  Water.updateMany(
+    { owner: id, createdAt: { $gte: startOfDay, $lt: endOfDay } },
+    { $set: { dailyNorm: waterRate } }
+  );
+
 export default {
   register,
   findUser,
@@ -26,4 +33,5 @@ export default {
   validatePassword,
   deleteUsers,
   waterRateDay,
+  waterRateForTodayRecords,
 };
