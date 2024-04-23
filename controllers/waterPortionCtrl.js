@@ -122,12 +122,6 @@ const monthlyWaterPortion = async (req, res) => {
       0
     );
 
-    filteredData.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return dateA - dateB;
-    });
-
     const dailyNorm = filteredData[filteredData.length - 1].dailyNorm;
     const dailyData = {
       date: format(recordDate, "d, MMMM"),

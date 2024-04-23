@@ -10,6 +10,8 @@ import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 import { passwordRecoveryLetter } from "../helpers/passwordRecoveryLetter.js";
 
+import Water from "../models/Water.js";
+
 const { JWT_SECRET, BASE_URL, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
 
 const register = async (req, res) => {
@@ -234,6 +236,21 @@ const waterRate = async (req, res) => {
   const { _id: id } = req.user;
 
   const result = await usersService.waterRateDay({ _id: id }, req.body);
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const waterRate = req.body.waterRate;
+
+  await usersService.waterRateForTodayRecords(
+    id,
+    startOfDay,
+    endOfDay,
+    waterRate
+  );
 
   res.status(200).json({ waterRate: result.waterRate });
 };
