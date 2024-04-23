@@ -336,6 +336,60 @@
           }
         }
       }
+    },
+    "/api/water-portions/month": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get water statistic for each day of chosen month",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "type": "string",
+            "description": "Date in format 2024-04-20T19:43:58.583Z"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getWaterStatisticResponse"
+                },
+                "example": [
+                  {
+                    "date": "16, April",
+                    "percent": "53%",
+                    "quantity": "3",
+                    "dailyNorm": "2l"
+                  },
+                  {
+                    "date": "17, April",
+                    "percent": "50%",
+                    "quantity": "2",
+                    "dailyNorm": "2l"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
 
@@ -465,6 +519,40 @@
           "date": "2024-04-20T19:43:58.583Z",
           "owner": "661d611659151681f4efe804",
           "_id": "66241b0b9546fc64382d529a"
+        }
+      },
+      "getWaterStatisticResponse": {
+        "type": "Array of objects",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Chosen month and year",
+              "example": "2024-04-20T19:43:58.583Z"
+            },
+            "percent": {
+              "type": "string",
+              "description": "Percent of daily norm achievement",
+              "example": "53%"
+            },
+            "quantity": {
+              "type": "string",
+              "description": "Quantity of daily records",
+              "example": "3"
+            },
+            "dailyNorm": {
+              "type": "number",
+              "description": "Daily norm for certain day",
+              "example": "2L"
+            }
+          }
+        },
+        "example": {
+          "date": "2024-04-20T19:43:58.583Z",
+          "percent": "53%",
+          "quantity": "3",
+          "dailyNorm": "2L"
         }
       }
     },
