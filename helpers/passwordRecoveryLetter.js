@@ -2,7 +2,7 @@ export const passwordRecoveryLetter = (email, verificationToken) => {
   const passwordLetter = {
     to: email,
     subject: "Reset Password",
-    html:     `<html lang="en">
+    html: `<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,8 +52,7 @@ export const passwordRecoveryLetter = (email, verificationToken) => {
             <div class="signature">The Water Tracker Team</div>
         </div>
     </body>
-  </html>`
-
-  }
+  </html>`,
+  };
   return passwordLetter;
 };
