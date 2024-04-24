@@ -216,6 +216,38 @@
         }
       }
     },
+    "/api/users/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get user's data",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "User is logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCurrentResponse"
+                },
+                "example": {
+                  "user": {
+                    "avatarURL": "https://s.gravatar.com/avatar/66c9da6f2d374d0074a76d28d531f0af?r=pg",
+                    "email": "email@email.com",
+                    "gender": "female",
+                    "username": "Jane",
+                    "waterRate": "2000"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No token provided",
+            "content": {}
+          }
+        }
+      }
+    },
     "/api/water-portions": {
       "post": {
         "tags": ["Water"],
@@ -471,6 +503,52 @@
           }
         }
       },
+      "getCurrentRequest": {
+        "type": "object",
+        "required": ["waterRate"],
+        "properties": {
+          "waterRate": {
+            "type": "integer",
+            "description": "User's water daily norm",
+            "example": "2000"
+          },
+          "waterVolume": {
+            "type": "number",
+            "description": "Volume of water recorded by the user",
+            "example": "143"
+          }
+        }
+      },
+      "getCurrentResponse": {
+        "type": "object",
+        "properties": {
+          "avaterURL": {
+            "type": "string",
+            "description": "http link to the avatar",
+            "example": "https://s.gravatar.com/avatar/66c9da6f2d374d0074a76d28d531f0af?r=pg"
+          },
+          "email": {
+            "type": "string",
+            "description": "email",
+            "example": "email@email.com"
+          },
+          "gender": {
+            "type": "string",
+            "description": "gender",
+            "example": "female"
+          },
+          "username": {
+            "type": "string",
+            "description": "username",
+            "example": "Jane"
+          },
+          "waterRate": {
+            "type": "integer",
+            "description": "water daily norma",
+            "example": "2000"
+          }
+        }
+      },
       "addWaterRequest": {
         "type": "object",
         "required": ["date", "waterVolume"],
@@ -489,29 +567,26 @@
       },
       "addWaterResponse": {
         "type": "object",
-        "items": {
-          "type": "object",
-          "properties": {
-            "waterVolume": {
-              "type": "number",
-              "description": "Volume of water recorded by the user",
-              "example": "143"
-            },
-            "date": {
-              "type": "string",
-              "description": "Recording time",
-              "example": "2024-04-20T19:43:58.583Z"
-            },
-            "owner": {
-              "type": "string",
-              "description": "Owner of the entered data",
-              "example": "661d611659151681f4efe804"
-            },
-            "_id": {
-              "type": "string",
-              "description": "Id of the entered data",
-              "example": "66241b0b9546fc64382d529a"
-            }
+        "properties": {
+          "waterVolume": {
+            "type": "number",
+            "description": "Volume of water recorded by the user",
+            "example": "143"
+          },
+          "date": {
+            "type": "string",
+            "description": "Recording time",
+            "example": "2024-04-20T19:43:58.583Z"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner of the entered data",
+            "example": "661d611659151681f4efe804"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Id of the entered data",
+            "example": "66241b0b9546fc64382d529a"
           }
         },
         "example": {
@@ -522,30 +597,27 @@
         }
       },
       "getWaterStatisticResponse": {
-        "type": "Array of objects",
-        "items": {
-          "type": "object",
-          "properties": {
-            "date": {
-              "type": "string",
-              "description": "Chosen month and year",
-              "example": "2024-04-20T19:43:58.583Z"
-            },
-            "percent": {
-              "type": "string",
-              "description": "Percent of daily norm achievement",
-              "example": "53%"
-            },
-            "quantity": {
-              "type": "string",
-              "description": "Quantity of daily records",
-              "example": "3"
-            },
-            "dailyNorm": {
-              "type": "number",
-              "description": "Daily norm for certain day",
-              "example": "2L"
-            }
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Chosen month and year",
+            "example": "2024-04-20T19:43:58.583Z"
+          },
+          "percent": {
+            "type": "string",
+            "description": "Percent of daily norm achievement",
+            "example": "53%"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Quantity of daily records",
+            "example": "3"
+          },
+          "dailyNorm": {
+            "type": "number",
+            "description": "Daily norm for certain day",
+            "example": "2L"
           }
         },
         "example": {
