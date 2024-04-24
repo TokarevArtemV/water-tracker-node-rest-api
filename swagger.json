@@ -390,6 +390,38 @@
           }
         }
       }
+    },
+    "/api/water-portions/today": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get water statistic for today",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getWaterTodayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
 
@@ -553,6 +585,55 @@
           "percent": "53%",
           "quantity": "3",
           "dailyNorm": "2L"
+        }
+      },
+      "getWaterTodayResponse": {
+        "type": "Object",
+        "items": {
+          "type": "object",
+          "properties": {
+            "data": [
+              {
+                "dailyNorm": {
+                  "type": "number",
+                  "description": "User-chosen daily norm",
+                  "example": "2100"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "Time selected by the user when adding a water portion",
+                  "example": "2024-04-20T19:43:58.583Z"
+                },
+                "owner": {
+                  "type": "string",
+                  "description": "Owner of the entered data",
+                  "example": "661d611659151681f4efe804"
+                },
+                "waterVolume": {
+                  "type": "number",
+                  "description": "Water volume recorded by the user in this portion",
+                  "example": "250"
+                },
+                "_id": {
+                  "type": "string",
+                  "description": "Id of the entered data",
+                  "example": "66241b0b9546fc64382d529a"
+                }
+              }
+            ]
+          }
+        },
+        "example": {
+          "data": [
+            {
+              "dailyNorm": "2100",
+              "date": "2024-04-23T11:39:52.555Z",
+              "owner": "661fd2b8e1533b8c7b8229f9",
+              "waterVolume": "250",
+              "_id": "66279e0c0908890cd1d204be"
+            }
+          ],
+          "interest": 11.9047619
         }
       }
     },
