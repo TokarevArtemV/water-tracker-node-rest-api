@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
 
 import usersService from "../services/usersServices.js";
@@ -163,7 +163,7 @@ const verifyResetPasswordEmail = async (req, res) => {
     {
       verificationToken,
       tokenResetExpirationTime,
-      verify:true,
+      verify: true,
     }
   );
 
@@ -172,7 +172,9 @@ const verifyResetPasswordEmail = async (req, res) => {
   const verifyEmail = passwordRecoveryLetter(email, verificationToken);
   await sendEmail(verifyEmail);
 
-  res.status(200).json({ message: "Password reset link has been sent to your email" });
+  res
+    .status(200)
+    .json({ message: "Password reset link has been sent to your email" });
 };
 
 const resetPassword = async (req, res) => {
@@ -186,26 +188,28 @@ const resetPassword = async (req, res) => {
 
   const currentTime = Date.now();
 
-  if (user.tokenResetExpirationTime && currentTime > user.tokenResetExpirationTime) {
+  if (
+    user.tokenResetExpirationTime &&
+    currentTime > user.tokenResetExpirationTime
+  ) {
     throw HttpError(400, "Reset token has expired");
   }
-  
+
   const hashPassword = await bcrypt.hash(password, 10);
   await usersService.updateUser(
     { _id: user._id },
-    { 
+    {
       password: hashPassword,
-      verify: true, 
+      verify: true,
       verificationToken: null,
-      tokenResetExpirationTime: null, 
+      tokenResetExpirationTime: null,
     }
   );
-  
-res.status(201).json({
-  message: "Password reset operation completed successfully."
-});
-};
 
+  res.status(201).json({
+    message: "Password reset operation completed successfully.",
+  });
+};
 
 const waterRate = async (req, res) => {
   const { _id: id } = req.user;
