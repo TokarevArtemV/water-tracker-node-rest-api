@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import { verifyEmailLetter } from "./verifyEmailLetter.js";
 
 const { JWT_SECRET } = process.env;
 
 const googleAuthenticator = async (data) => {
+  console.log("🌷  data:", data);
 
-  console.log('🌷  data:', data)
-  
   const { email, given_name, picture } = data;
 
   let user;
@@ -45,8 +44,7 @@ const googleAuthenticator = async (data) => {
   const verifyEmail = verifyEmailLetter(email, verificationToken);
   await sendEmail(verifyEmail);
 
-  return token; //! Можливо також виконати перенаправлення для входу 
+  return token; //! Можливо також виконати перенаправлення для входу
 };
 
 export default googleAuthenticator;
-

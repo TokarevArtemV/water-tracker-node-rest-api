@@ -7,8 +7,8 @@ import authenticate from "./middlewares/authenticate.js";
 import userRouter from "./routes/userRouter.js";
 import googleRouter from "./routes/googleRouter.js";
 import waterPortionsRouter from "./routes/waterPortionsRouter.js";
-import "dotenv/config.js";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
+import "dotenv/config.js";
 
 const { PORT = 3000, DB_HOST } = process.env;
 const app = express();
