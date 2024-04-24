@@ -216,6 +216,53 @@
         }
       }
     },
+    "/api/users/waterRate": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Editing user's daily water intake norm",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Object ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userWaterRateRequest"
+              },
+              "example": {
+                "waterRate": 2400
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userWaterRateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
     "/api/water-portions": {
       "post": {
         "tags": ["Water"],
@@ -501,6 +548,33 @@
               }
             }
           }
+        }
+      },
+      "userWaterRateRequest": {
+        "type": "object",
+        "required": ["waterRate"],
+        "properties": {
+          "waterRate": {
+            "type": "number",
+            "description": "The daily intake volume specified by the user in milliliters",
+            "example": 2100
+          }
+        }
+      },
+      "userWaterRateResponse": {
+        "type": "object",
+        "items": {
+          "type": "object",
+          "properties": {
+            "waterRate": {
+              "type": "number",
+              "description": "User-chosen daily norm",
+              "example": 2100
+            }
+          }
+        },
+        "example": {
+          "waterRate": 2100
         }
       },
       "addWaterRequest": {
