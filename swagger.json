@@ -524,28 +524,29 @@
         "properties": {
           "avaterURL": {
             "type": "string",
-            "description": "http link to the avatar",
-            "example": "https://s.gravatar.com/avatar/66c9da6f2d374d0074a76d28d531f0af?r=pg"
-          },
-          "email": {
-            "type": "string",
-            "description": "email",
-            "example": "email@email.com"
-          },
-          "gender": {
-            "type": "string",
-            "description": "gender",
-            "example": "female"
-          },
-          "username": {
-            "type": "string",
-            "description": "username",
-            "example": "Jane"
-          },
-          "waterRate": {
-            "type": "integer",
-            "description": "water daily norma",
-            "example": "2000"
+            "description": "User's data",
+            "example": {
+              "email": {
+                "type": "string",
+                "description": "email",
+                "example": "email@email.com"
+              },
+              "gender": {
+                "type": "string",
+                "description": "gender",
+                "example": "female"
+              },
+              "username": {
+                "type": "string",
+                "description": "username",
+                "example": "Jane"
+              },
+              "waterRate": {
+                "type": "integer",
+                "description": "water daily norma",
+                "example": "2000"
+              }
+            }
           }
         }
       },
