@@ -3,14 +3,19 @@ import axios from "axios";
 import googleAuthenticator from "../helpers/googleAuthenticator.js";
 import controllerWrapper from "../helpers/ctrlWrapper.js";
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_CLIENT } = process.env;
+const {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  BASE_URL_SERVER,
+  BASE_URL_CLIENT,
+} = process.env;
 
 const googleAuth = async (req, res) => {
   console.log("Hello from googleAuth !");
 
   const stringifiedParams = queryString.stringify({
     client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: `${BASE_URL_CLIENT}/api/auth/google-redirect`,
+    redirect_uri: `${BASE_URL_SERVER}/api/auth/google-redirect`,
     scope: [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile",
@@ -38,7 +43,7 @@ const googleRedirect = async (req, res) => {
     data: new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
       client_secret: GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${BASE_URL_CLIENT}/api/auth/google-redirect`,
+      redirect_uri: `${BASE_URL_SERVER}/api/auth/google-redirect`,
       grant_type: "authorization_code",
       code,
     }),
