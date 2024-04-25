@@ -40,7 +40,7 @@ export const verifyEmailLetter = (email, verificationToken) => {
             <h1 class="title">Water Tracker App</h1>
             <h6 class="subtitle">Verify your email address</h6>
             <p>Thanks for signing up with us. <br/> Click on the button below to verify your email address.</p>
-            <a class="button" href="${process.env.BASE_URL_CLIENT}/api/users/verify/${verificationToken}">Click to verify email</a>
+            <a class="button" href="${process.env.BASE_URL_SERVER}/api/users/verify/${verificationToken}">Click to verify email</a>
             <p class="description">If this email wasn't intended for you, feel free to delete it.</p>
         </div>
     </body>

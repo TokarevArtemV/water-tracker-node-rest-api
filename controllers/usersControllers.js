@@ -10,7 +10,8 @@ import sendEmail from "../helpers/sendEmails.js";
 import { verifyEmailLetter } from "../helpers/verifyEmailLetter.js";
 import { passwordRecoveryLetter } from "../helpers/passwordRecoveryLetter.js";
 
-const { JWT_SECRET, SEND_MAIL_FROME, BASE_URL_CLIENT } = process.env;
+const { JWT_SECRET, SEND_MAIL_FROME, BASE_URL_SERVER, BASE_URL_CLIENT } =
+  process.env;
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -69,7 +70,7 @@ const verifyAgain = async (req, res) => {
   const reverifyEmail = {
     to: [email, SEND_MAIL_FROME],
     subject: "Verify email",
-    html: `<a href="${BASE_URL_CLIENT}/api/users/verify/${user.verificationToken}" target="_blank">Click to verify</a>`,
+    html: `<a href="${BASE_URL_SERVER}/api/users/verify/${user.verificationToken}" target="_blank">Click to verify</a>`,
   };
 
   await sendEmail(reverifyEmail);
