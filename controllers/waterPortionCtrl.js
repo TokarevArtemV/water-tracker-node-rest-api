@@ -46,7 +46,7 @@ const todayWaterPortion = async (req, res) => {
     currentDay = new Date(utcDate.setDate(Number(timeday)));
   }
 
-  const timeZoneOffset = -timeZoneFromHeader * 60 * 1000;
+  const timeZoneOffset = -(-180) * 60 * 1000;
 
   const startOfDay = new Date(
     currentDay.setUTCHours(0, 0, 0, 0) - timeZoneOffset
@@ -54,7 +54,7 @@ const todayWaterPortion = async (req, res) => {
   const endOfDay = new Date(
     currentDay.setUTCHours(23, 59, 59, 999) - timeZoneOffset
   );
-  console.log(timezone, timeday, timeZoneOffset);
+  console.log(timezone, timeday, timeZoneFromHeader);
   console.log(startOfDay, endOfDay);
   const foundWaterDayData = await waterPortionServices.getWaterDayData({
     owner,
