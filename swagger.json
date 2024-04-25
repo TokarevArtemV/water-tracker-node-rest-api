@@ -218,7 +218,7 @@
     },
     "/api/users/current": {
       "get": {
-        "tags": ["Auth"],
+        "tags": ["User"],
         "summary": "Get user's data",
         "security": [{ "Bearer": [] }],
         "responses": {
