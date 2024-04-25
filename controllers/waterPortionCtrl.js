@@ -35,7 +35,8 @@ const deleteWaterPortion = async (req, res) => {
 const todayWaterPortion = async (req, res) => {
   const { _id: owner, waterRate } = req.user;
   const { timezone, timeday } = req.headers;
-  const timeZone = new Date().getTimezoneOffset(timezone);
+
+  const timeZoneFromHeader = new Date().getTimezoneOffset(timezone);
   let utcDate = new Date();
   let currentDay;
 
@@ -45,7 +46,7 @@ const todayWaterPortion = async (req, res) => {
     currentDay = new Date(utcDate.setDate(Number(timeday)));
   }
 
-  const timeZoneOffset = -timeZone * 60 * 1000;
+  const timeZoneOffset = -timeZoneFromHeader * 60 * 1000;
   const startOfDay = new Date(
     currentDay.setUTCHours(0, 0, 0, 0) - timeZoneOffset
   );
