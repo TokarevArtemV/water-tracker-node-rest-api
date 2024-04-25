@@ -54,6 +54,7 @@ const todayWaterPortion = async (req, res) => {
   const endOfDay = new Date(
     currentDay.setUTCHours(23, 59, 59, 999) - timeZoneOffset
   );
+  console.log(timezone, timeday, timeZoneOffset);
   console.log(startOfDay, endOfDay);
   const foundWaterDayData = await waterPortionServices.getWaterDayData({
     owner,
