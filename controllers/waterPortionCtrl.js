@@ -46,7 +46,9 @@ const todayWaterPortion = async (req, res) => {
     currentDay = new Date(utcDate.setDate(Number(timeday)));
   }
 
-  const timeZoneOffset = -timeZoneFromHeader * 60 * 1000;
+  // const timeZoneOffset = -timeZoneFromHeader * 60 * 1000;
+  const timeZoneOffset = 0;
+
   const startOfDay = new Date(
     currentDay.setUTCHours(0, 0, 0, 0) - timeZoneOffset
   );
