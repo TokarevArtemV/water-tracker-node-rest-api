@@ -33,14 +33,26 @@ const deleteWaterPortion = async (req, res) => {
 };
 
 const todayWaterPortion = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { waterRate } = req.user;
+  const { _id: owner, waterRate } = req.user;
+  const { timezone, timeday } = req.headers;
 
-  const utcDate = new Date().toUTCString();
-  const startOfDay = new Date(utcDate);
-  startOfDay.setUTCHours(0, 0, 0, 0);
-  const endOfDay = new Date(utcDate);
-  endOfDay.setUTCHours(23, 59, 59, 999);
+  const timeZoneFromHeader = new Date().getTimezoneOffset(timezone);
+  let utcDate = new Date();
+  let currentDay;
+
+  if (Number(timeday) === 1) {
+    currentDay = new Date(utcDate.getTime() - 24 * 60 * 60 * 1000);
+  } else {
+    currentDay = new Date(utcDate.setDate(Number(timeday)));
+  }
+
+  const timeZoneOffset = -timeZoneFromHeader * 60 * 1000;
+  const startOfDay = new Date(
+    currentDay.setUTCHours(0, 0, 0, 0) - timeZoneOffset
+  );
+  const endOfDay = new Date(
+    currentDay.setUTCHours(23, 59, 59, 999) - timeZoneOffset
+  );
 
   const foundWaterDayData = await waterPortionServices.getWaterDayData({
     owner,

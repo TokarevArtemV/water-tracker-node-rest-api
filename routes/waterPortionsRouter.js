@@ -4,6 +4,7 @@ import isValidId from "../middlewares/isValidId.js";
 import {
   createWaterPortionSchema,
   updateWaterPortionSchema,
+  todayWaterPortionSchema,
 } from "../schemas/waterPortionSchemas.js";
 import waterPortionCtrl from "../controllers/waterPortionCtrl.js";
 
